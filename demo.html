@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>JB Custom Marketo Form Embed</title>
+		<style>
+			body { margin:1em auto; width: 75%; font-family: Helvetica,Arial,sans-serif; }
+			.main { float:left;width:55%; }
+			.sidebar { float:right;width:35%;margin:1em auto;padding:.5em 1em;background:#e8e8e8; }
+			.class1:before,.class2:after { font-style:italic;font-size:.8em;color:#888; }
+			.class1:before { content:".class1 applied"; }
+			.class2:after { content:".class2 applied"; }
+			@media only screen and (max-width: 768px), only screen and (max-device-width: 768px), only screen and (max-device-height:768px) {
+				body { margin:0;width:100%; }
+				.main { float:none; width:100%; }
+				.sidebar { float:none; width:100%; }
+			}
+		</style>
+	</head>
+	<body>
+		
+		<section class="main">
+			<h1>JB Marketo Form Embed</h1>
+
+			<p>This is a demo of the JB Marketo Form Embed script.</p>
+			
+			<h2 id="makesmarketerslivesbetter">Makes marketers&#8217; lives better</h2>
+
+			<p>This script adds helpful functionality to embedded Marketo forms. It&#8217;s designed by and for marketers to solve common marketing challenges and overcome limitations of the default Marketo form functionality in an easy-to-use package built for non-coders.</p>
+
+			<h2 id="coderslikeittoo">Coders like it, too</h2>
+
+			<p>Behind the scenes, the script uses and makes available the <a href="http://developers.marketo.com/javascript-api/forms/api-reference/">MktoForms2 API</a>. Basically, that means that it is still developer friendly, too, so your developer counterparts can easily extend and customize the functionality further if they wish without having to </p>
+
+			<h2 id="documentation">Documentation</h2>
+
+			<p>Documentation is available on GitHub: <a href="https://github.com/jonbourne/jb-marketo-form-embed">JB Marketo Form Embed</a></p>
+		</section>
+
+		<section class="sidebar">
+			<h2>Demo Form</h2>
+
+			<script>
+			function myReadyFunction(form) { console.log(form); }
+			function myValidateFunction(boolean) { console.log(boolean); }
+			function mySubmitFunction(form) { console.log(form); }
+			function mySuccessFunction(formValues) { console.log(formValues); }
+			</script>
+
+			<script src="jb-marketo-form-embed.js"></script>
+			
+			<script>
+				(function(){
+					f                 = new JBMarketoForm;
+					f.formId          = 1273;
+					f.submitText      = 'Custom Submit Button Text';
+					f.successMsg      = '<div><strong>Thank you</strong><br>Form submitted!</div>';
+					f.redirectUrl     = 'http://jonbourne.com/';
+					f.redirectDelay   = 10;
+					f.destyle         = true;
+					f.basicStyles     = true;
+					f.formClass       = 'class1 class2';
+					f.removeFields    = ['Salutation','MiddleName','Title'];
+					f.onReady(myReadyFunction);
+					f.onValidate(myValidateFunction);
+					f.onSubmit(mySubmitFunction);
+					f.onSuccess(mySuccessFunction);
+					f.log();
+				})();
+			</script>
+		</section>
+
+	</body>
+</html>
