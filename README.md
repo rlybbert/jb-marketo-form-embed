@@ -89,3 +89,4 @@ Configure form settings on the `f` object (which is an instance of `JBMarketoFor
 *   Add support for multiple forms
 *   Add support for form localization (multiple languages)
 *   Add option to show a custom success container, instead of using `successMsg`
+*   Add support for modal forms

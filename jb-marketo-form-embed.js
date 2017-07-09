@@ -2,7 +2,7 @@
  *
  * AUTHOR: Jon Bourne, @jondbourne, jonbourne.com
  * 
- * REVISED: 2017-06-24
+ * REVISED: 2017-07-09
  *
  * DESCRIPTION: Extends embedded Marketo forms with additional functionality
  * 
@@ -39,6 +39,10 @@ function JBMarketoForm() {
 	p.sinceConnectStartBegin = Date.now() - window.performance.timing.connectStart;
 	p.begin = Date.now();
 
+	// Get script element
+	var scripts = document.getElementsByTagName('script');
+	jbmf.script = scripts[scripts.length - 1];
+	
 	// Store form object in global variable, kicks off form rendering
 	setTimeout(function(){
 		if(!window.jbmf) {
@@ -50,6 +54,10 @@ function JBMarketoForm() {
 		if(window.jbmf.ids.indexOf(jbmf.formId) === -1) {
 			window.jbmf.ids.push(jbmf.formId);
 		}
+		
+		// Log performance data
+		p.dependenciesLoading = Date.now() - p.begin;
+		
 		load();
 	},0);
 
@@ -176,6 +184,7 @@ function JBMarketoForm() {
 
 	// Are dependencies loaded?
 	function dependenciesAreLoaded() {
+		// Check for each dependency
 		if(!dependencyIsLoaded('MktoForms2')) { return false; }
 		
 		loading = false;
@@ -202,17 +211,8 @@ function JBMarketoForm() {
 	// Sets id attribute of current script tag
 	function setScriptId() {
 		
-		// Get all scripts
-		var allScripts = document.getElementsByTagName('script');
-		
-		// Get index of last script
-		var lastScript = allScripts.length - 1;
-		
-		// Get last script
-		jbmf.script = allScripts[ lastScript ];
-		
 		// Set id attribute of script tag
-		jbmf.script.id = 'jb_mktoForm_' + jbmf.formId + '_' + lastScript;
+		jbmf.script.id = 'jb_mktoForm_' + jbmf.formId + '_' + Math.floor(Math.random()*1000);
 		
 		// Store script and id
 		scriptId = jbmf.script.id;
@@ -280,14 +280,14 @@ function JBMarketoForm() {
 			css+=".mktoButtonRow{padding-top:.75em;}";
 			css+=".mktoButton{padding:.5em 1em .4em;}";
 			css+=".mktoAsterix{display: none;}";
-			css+=".mktoLabel{font-size:.9em}"
+			css+=".mktoLabel{font-size:.9em}";
 			css+=".mktoRequiredField .mktoLabel:after{content:' *';font-weight:bold;font-size:.9em;}";
 			css+=".mktoForm .mktoError {position: absolute;right:auto !important;bottom:auto !important;z-index: 99;color: #bf0000;}";
 			css+=".mktoForm .mktoError .mktoErrorArrowWrap {width: 16px;height: 8px;overflow: hidden;position: absolute;top: 0;left: 5px;z-index: 100;}";
 			css+=".mktoForm .mktoError .mktoErrorArrow {background-color: #e51b00;border: 1px solid #9f1300;border-right: none;border-bottom: none;display: inline-block;height: 16px;-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);transform: rotate(45deg);-ms-transform: rotate(45deg);width: 16px;margin-top: 5px;}";
 			css+=".mktoForm .mktoError .mktoErrorMsg {display: block;margin-top: 7px;background-color: #e51b00;background-image: -webkit-linear-gradient(#e51b00 43%, #ba1600 100%);background-image: -moz-linear-gradient(#e51b00 43%, #ba1600 100%);background-image: linear-gradient(#e51b00 43%, #ba1600 100%);background-image: -ms-linear-gradient(#e51b00 43%, #ba1600 100%);border: 1px solid #9f1300;-webkit-border-radius: 6px;border-radius: 6px;-webkit-box-shadow: rgba(0,0,0,0.65) 0 2px 7px, inset #ff3c3c 0 1px 0px;box-shadow: rgba(0,0,0,0.65) 0 2px 7px, inset #ff3c3c 0 1px 0px;color: #f3f3f3;font-size: 1em;line-height: 1.2em;max-width: 16em;padding: 0.4em 0.6em;text-shadow: #901100 0 -1px 0;}";
 
-			$('head').append('<style type="text/css">' + css + '</style>')
+			$('head').append('<style type="text/css">' + css + '</style>');
 			m('Basic styling has been applied to form#' + formHtmlId + '.');
 		}
 		form$.removeAttr('style');
@@ -359,6 +359,9 @@ function JBMarketoForm() {
 			// Create form element
 			formHtml = '<form id="mktoForm_' + jbmf.formId + '" style="display:none;"></form>' ;
 			$('script#' + scriptId).before(formHtml);
+
+			// Log performance data
+			p.formLoading = Date.now() - p.begin;
 
 			// Load the requested Marketo form
 			MktoForms2.loadForm(jbmf.baseUrl, jbmf.munchkinId, jbmf.formId, function(){
